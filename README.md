@@ -1,6 +1,6 @@
 # Bridge
-![GitHub License](https://img.shields.io/github/license/The-Bridge-Foundation/BridgeToolchain?style=plastic)
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/The-Bridge-Foundation/BridgeToolchain?style=plastic)
+![GitHub License](https://img.shields.io/github/license/The-Bridge-Foundation/BridgeToolchain?style=plastic&label=License)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/The-Bridge-Foundation/BridgeToolchain?style=plastic&label=Issues)
 
 **Bridge** is a general-purpose programming language, designed to be easily embedded in other programs. The syntax follows a C-like philosophy to make the code easy to read.
 
