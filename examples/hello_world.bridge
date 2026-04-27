@@ -1,0 +1,5 @@
+@Import(Console)
+
+func Main(args string[]) {
+    Console::Print("Hello, world!")
+}

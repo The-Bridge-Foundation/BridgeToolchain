@@ -1,0 +1,27 @@
+@Import(Console)
+
+func Main() {
+    loop { //Forever, until break
+        Console::Print("Loop")
+        times 5 { // X times
+            Console::Print("Times")
+            while true { //until condition is false, in this case it could be loop
+                Console::Print("While")
+                each x [0,0,0,0] { //for all elements of the array (can also be a varname), x is a pointer to current element
+                    Console::Print("Each")
+                    break
+                }
+                Console::Print("While 2")
+                escape // break all breakable loops
+            }
+        }
+    }
+    Console::Print("Func")
+    times 3 {
+        Console::Print("Last times")
+        loop {
+            Console::Print("Last loop")
+            break
+        }
+    }
+}

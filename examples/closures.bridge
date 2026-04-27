@@ -1,0 +1,16 @@
+@Import(Console)
+
+func MakeCounter() func() int {
+    let count = 0
+    return func() int {
+        count += 1
+        return count
+    }
+}
+
+func Main() {
+    let counter = MakeCounter()
+    Console::Printf("%d\n", counter())
+    Console::Printf("%d\n", counter())
+    Console::Printf("%d\n", counter())
+}

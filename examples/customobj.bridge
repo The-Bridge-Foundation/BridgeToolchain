@@ -1,0 +1,20 @@
+@Import(Console)
+
+obj MyObject {
+    foo int
+    bar func(self, int) int
+}
+
+func MakeMyObject(a int) MyObject {
+    set mobj MyObject
+    mobj.foo = a
+    mobj.bar = func (s self, c int) int {
+        return c+s.foo
+    }
+    
+    return mobj
+}
+
+func Main() {
+    Console::Printf("%d\n", MakeMyObject(0).bar(3)) 
+}

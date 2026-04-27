@@ -1,0 +1,21 @@
+@Import(Console)
+
+func Main(args string[]) {
+    let n = 9
+    set a,b,c,i int
+    a = 1
+    b = 0
+    i = 0
+    times n {
+        ++i
+        c = a+b
+        if i > 2 {
+            b = a
+            a = c
+            Console::Printf("%d\n", c)
+        } else if i == 1 {
+            Console::Printf("%d\n", b)
+        } else
+            Console::Printf("%d\n", a)
+    }
+}

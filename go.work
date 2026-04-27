@@ -1,0 +1,14 @@
+go 1.25.1
+
+use ./libs/antlr
+
+use ./bridgec
+
+use ./stdlib
+
+use ./bridgelib
+
+use ./bridger
+
+replace bridgelang.dev/bridgec-libs/antlr v0.0.0 => ./libs/antlr
+replace bridgelang.dev/bridgelib v0.0.0 => ./bridgelib

@@ -1,0 +1,7 @@
+@Import(Console)
+
+func Main(args string[]) {
+    each arg args {
+        Console::Print(arg)
+    }
+}
