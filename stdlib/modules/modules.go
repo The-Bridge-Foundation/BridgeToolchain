@@ -7,6 +7,7 @@ var moduleExports = map[string]func() []Export{
 	"Math":       MathExports,
 	"Memory":     MemoryExports,
 	"Filesystem": FileSystemExports,
+	"FFI":        FFIExports,
 }
 
 // For runtime usage

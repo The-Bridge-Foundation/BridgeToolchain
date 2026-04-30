@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"bridgelang.dev/bridge-stdlib/spec"
+	_ "bridgelang.dev/bridge-stdlib/modules"
 	"tinygo.org/x/go-llvm"
 )
 

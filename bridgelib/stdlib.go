@@ -122,6 +122,7 @@ func registerStdlib(linker *wasmtime.Linker, sm *sharedMem) error {
 		{modules.MathName, modules.MathExports},
 		{modules.MemoryName, modules.MemoryExports},
 		{modules.FileSystemName, modules.FileSystemExports},
+		{modules.FFIName, modules.FFIExports},
 	} {
 		for _, exp := range mod.exports() {
 			if err := registerExport(linker, mod.ns, exp, sm); err != nil {

@@ -62,6 +62,7 @@ func GetIndent(n int) string {
 }
 
 func (v *Visitor) MakeVisitor() {
+	v.BaseBridgeVisitor = &parser.BaseBridgeVisitor{} // Mutes CodeQL analysis error
 	v.Results = make(map[string]any)
 	v.vars = make(map[string]llvm.Value)
 	v.globalVars = make(map[string]llvm.Value)
@@ -680,6 +681,42 @@ func (v *Visitor) VisitDecl(ctx *parser.DeclContext) any {
 		raw := v.Visit(ctx.AssignmentOp().(*parser.AssignmentOpContext).Value())
 		if lv, ok := raw.(llvm.Value); ok {
 			initVal = lv
+			hasInit = true
+		}
+	}
+
+	// Store all arrays in BSS
+	if !hasInit && ctx.AssignmentOp() != nil && strings.HasSuffix(typekey, "[]") &&
+		!strings.Contains(typekey[:len(typekey)-2], "[") {
+		valCtx := ctx.AssignmentOp().(*parser.AssignmentOpContext).Value().(*parser.ValueContext)
+		if valCtx.ArrayLiteral() != nil {
+			al := valCtx.ArrayLiteral().(*parser.ArrayLiteralContext)
+			var elems []llvm.Value
+			if am := al.ArrayMembers(); am != nil {
+				for _, vc := range am.(*parser.ArrayMembersContext).AllValue() {
+					if lv, ok := v.Visit(vc).(llvm.Value); ok {
+						elems = append(elems, lv)
+					}
+				}
+			}
+			i64 := v.Llvmctx.Int64Type()
+			i8ptr := llvm.PointerType(v.Llvmctx.Int8Type(), 0)
+			n := len(elems)
+			totalBytes := llvm.ConstInt(i64, uint64((n+1)*8), false)
+			malloc := v.getOrDeclareMalloc()
+			mallocType := llvm.FunctionType(i8ptr, []llvm.Type{i64}, false)
+			slicePtr := v.Builder.CreateCall(mallocType, malloc, []llvm.Value{totalBytes}, "slice")
+			// store length at offset 0
+			lenGEP := v.Builder.CreateGEP(i64, slicePtr, []llvm.Value{llvm.ConstInt(i64, 0, false)}, "slice.len")
+			v.Builder.CreateStore(llvm.ConstInt(i64, uint64(n), false), lenGEP)
+			// store elements at offsets 1..n
+			elemTypeStr := typekey[:len(typekey)-2]
+			elemType := v.ResolveType(elemTypeStr)
+			for i, elem := range elems {
+				gep := v.Builder.CreateGEP(i64, slicePtr, []llvm.Value{llvm.ConstInt(i64, uint64(i+1), false)}, fmt.Sprintf("slice.%d", i))
+				v.Builder.CreateStore(v.coerce(elem, elemType), gep)
+			}
+			initVal = slicePtr
 			hasInit = true
 		}
 	}
