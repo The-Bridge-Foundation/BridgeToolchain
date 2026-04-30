@@ -62,6 +62,7 @@ func GetIndent(n int) string {
 }
 
 func (v *Visitor) MakeVisitor() {
+	v.BaseBridgeVisitor = &parser.BaseBridgeVisitor{} // Mutes CodeQL analysis error
 	v.Results = make(map[string]any)
 	v.vars = make(map[string]llvm.Value)
 	v.globalVars = make(map[string]llvm.Value)
